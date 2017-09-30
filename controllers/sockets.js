@@ -1,12 +1,15 @@
 module.exports = function(io){
-    // io.on('connection' , function(socket){
-    //
-    //
-    //     socket.on('btnClick' , function(data){
-    //         console.log("Clicked");
-    //         socket.emit('btnClick');
-    //     });
-    //
-    // 
-    // });
+    io.on('connection' , function(socket){
+
+
+        socket.on('updateSquarePos' , function(data){
+            socket.broadcast.emit('updateSquarePos', {pos : data.pos, id : data.id});
+        });
+
+        socket.on('newSquare', function(data){
+            io.sockets.emit('newSquare' , {user : data.user})
+        });
+
+
+    });
 }

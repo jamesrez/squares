@@ -4,24 +4,60 @@ var server = require('http').Server(app);
 var path = require('path');
 var io = require('socket.io')(server);
 var port = process.env.PORT || '8080';
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash    = require('connect-flash');
 
+var morgan       = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser   = require('body-parser');
+var session      = require('express-session');
 
+require('./controllers/passport')(passport);
 
 app.set('view-engine' , 'jade');
 app.use(express.static(path.join(__dirname, 'views/styles')));
 app.use(express.static(path.join(__dirname, 'views/scripts')));
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser()); // get information from html forms
+
+// required for passport
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+
+mongoose.connect('mongodb://localhost/my_databoi', {useMongoClient:true});
 
 app.get('/', function(req,res){
-    res.render('index.jade');
+    res.render('index.jade', {curUser : req.user});
 });
 
-io.sockets.on('connection' , function(socket){
+app.post('/register', passport.authenticate('local-signup', {
+        successRedirect : '/', // redirect to the secure profile section
+        failureRedirect : '/', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+}));
 
-    socket.on('btnClick' , function(){
-        socket.emit('btnClick');
-    });
+app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/', // redirect to the secure profile section
+        failureRedirect : '/', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+}));
 
+app.post('/logout' , function(req,res){
+    req.logout();
+    res.redirect('/');
 });
+
+function isLoggedIn(req, res, next) {
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next();
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
 
 require('./controllers/sockets.js')(io);
 
