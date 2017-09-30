@@ -3,10 +3,21 @@ block head
     link(rel='stylesheet' , href='index.css')
     script(src='index.js')
 block body
+    .nav
+        if(!curUser)
+            form(method="post")
+                input#email(name='email' type='text' placeholder='email')
+                input#password(name='password' type='password' placeholder='password')
+                p#login Login
+                p#register Register
+        else
+            button#newSquareBtn New Square
+            p#userProf=curUser.email
+            p#logout Logout
     .squareContainer
-        .square
-            p#squareText This is my first square. Isn't it neat??
-        .square
-            p#squareText This is my second square. Isn't it neat??
-    .btn Click
+        .square#square1
+            p#squareText Square #1
+        .square#square2
+            p#squareText Square #2
+
             

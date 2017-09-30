@@ -13,3 +13,20 @@
     padding : 20px;
     border : 2px solid blue;
 }
+
+.nav{
+    float : right;
+}
+
+.nav p{
+    text-decoration: underline;
+    margin : 0px 5px;
+    display: inline;
+    cursor : pointer;
+}
+
+#newSquareBtn{
+    border : none;
+    font-size : 15px;
+    padding : 5px 7px;
+}
