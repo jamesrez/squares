@@ -6,13 +6,13 @@ block body
     .nav
         if(!curUser)
             form(method="post")
-                input#email(name='email' type='text' placeholder='email')
+                input#username(name='username' type='text' placeholder='username')
                 input#password(name='password' type='password' placeholder='password')
                 p#login Login
                 p#register Register
         else
             button#newSquareBtn New Square
-            p#userProf=curUser.email
+            p#userProf=curUser.username
             p#logout Logout
     .squareContainer
         .square#square1
