@@ -12,6 +12,7 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+require('dotenv').config();
 
 require('./controllers/passport')(passport);
 
@@ -28,7 +29,9 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 
-mongoose.connect('mongodb://localhost/my_databoi', {useMongoClient:true});
+mongoose.connect(process.env.MONGO_URL, function(err){
+    //if(err) throw err;
+});
 
 app.get('/', function(req,res){
     res.render('index.jade', {curUser : req.user});
