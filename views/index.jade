@@ -2,6 +2,7 @@ extends layout
 block head
     link(rel='stylesheet' , href='index.css')
     script(src='index.js')
+    script(src='jscolor.min.js')
 block body
     .nav
         if(!curUser)
@@ -14,10 +15,14 @@ block body
             button#newSquareBtn New Square
             p#userProf=curUser.username
             p#logout Logout
+        .squarePrototype
+            p#squareText New Square
     .squareContainer
-        .square#square1
-            p#squareText Square #1
-        .square#square2
-            p#squareText Square #2
+        .square.squareAnon#sq1
+            p#squareText 
+            button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
+        .square.squareAnon#sq2
+            p#squareText 
+            button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
 
             
