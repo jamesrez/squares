@@ -1,7 +1,11 @@
 var socket = io();
 
+//Update Colors
 function colorUpdate(jscolor){
-  $(jscolor.styleElement).parent().css('background-color' , '#'+jscolor);
+  var newColor = '#'+jscolor;
+  var squareId = '#' + $(jscolor.styleElement).parent().attr('id');
+  $(jscolor.styleElement).parent().css('background-color' , newColor);
+  socket.emit('updateSquareColor' , {color : newColor, id : squareId})
 }
 
 //Make the squares draggable
@@ -15,7 +19,14 @@ function makeDraggable(squareClass){
                 socket.emit('updateSquarePos' , {pos : squarePos, id : squareId});
             }
         });
-        $(squareClass).resizable();
+        $(squareClass).resizable({
+          resize : function(event,ui){
+            var squareWidth = $(this).width();
+            var squareHeight = $(this).height();
+            var squareId = $(this).attr('id');
+            socket.emit('updateSquareSize' , {width : squareWidth, height :squareHeight, id:squareId});
+          }
+        });
     }
 }
 
@@ -37,6 +48,17 @@ $(document).ready(function(){
     socket.on('updateSquarePos' , function(data){
         //Update the square's offset position
         $('#'+data.id).offset(data.pos);
+    });
+
+    //When a square is resized on another client
+    socket.on('updateSquareSize' , function(data){
+        $('#'+data.id).width(data.width);
+        $('#'+data.id).height(data.height);
+    });
+
+    //When a square is recolored on another client
+    socket.on('updateSquareColor' , function(data){
+        $(data.id).css('background-color' , data.color);
     });
 
     //When you create a new square
