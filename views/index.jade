@@ -16,7 +16,8 @@ block body
             p#userProf=curUser.username
             p#logout Logout
         .squarePrototype
-            p#squareText New Square
+            p#squareText
+            button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
     .squareContainer
         .square.squareAnon#sq1
             p#squareText 
