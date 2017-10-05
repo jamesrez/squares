@@ -27,6 +27,7 @@ function makeDraggable(squareClass){
             socket.emit('updateSquareSize' , {width : squareWidth, height :squareHeight, id:squareId});
           }
         });
+        jscolor.installByClassName("jscolor");
     }
 }
 
@@ -72,20 +73,24 @@ $(document).ready(function(){
         var userSqCount = getUserSqCount(data.user);
         var newClass = "sq-"+data.user;
         var newId = "sq-" + data.user + "-" + userSqCount;
-        var newSquare = $('.squarePrototype').clone().attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
-        newSquare.removeClass('squarePrototype')
+        var newSquare = $('.squarePrototype').clone(true,true).attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
+        newSquare.removeClass('squarePrototype');
         makeDraggable('.'+ newClass);
     })
 
     //Color When Press C
     $(document).on("keydown", function(e){
       if(e.which == 67){
-        $('.color').css('display' , 'block');
+        var squareClass = ".sq-" + $('#userProf').text();
+        $(squareClass).children('.color').css('display' , 'block');
+        $('.squareAnon').children('.color').css('display' , 'block');
       }
     });
     $(document).on("keyup", function(e){
       if(e.which == 67){
-        $('.color').css('display' , 'none');
+        var squareClass = ".sq-"+$('#userProf').text();
+        $(squareClass).children('.color').css('display' , 'none');
+        $('.squareAnon').children('.color').css('display' , 'none');
       }
     });
 
