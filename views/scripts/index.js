@@ -15,8 +15,9 @@ function makeDraggable(squareClass){
             stack : ".square",
             drag : function(event, ui){
                 var squarePos = $(this).offset();
+                var squareZ = $(this).css('z-index');
                 var squareId = $(this).attr('id');
-                socket.emit('updateSquarePos' , {pos : squarePos, id : squareId});
+                socket.emit('updateSquarePos' , {pos : squarePos, zIndex : squareZ, id : squareId});
             }
         });
         $(squareClass).resizable({
@@ -54,6 +55,8 @@ $(document).ready(function(){
     socket.on('updateSquarePos' , function(data){
         //Update the square's offset position
         $('#'+data.id).offset(data.pos);
+        //Update the square's zIndex
+        $('#'+data.id).css('z-index' , data.zIndex);
     });
 
     //When a square is resized on another client
