@@ -1,6 +1,7 @@
 extends layout
 block head
     link(rel='stylesheet' , href='index.css')
+    script(src='https://cdn.jsdelivr.net/npm/autosize@4.0.0/dist/autosize.min.js')
     script(src='index.js')
     script(src='jscolor.min.js')
 block body
@@ -16,14 +17,17 @@ block body
             p#userProf=curUser.username
             p#logout Logout
         .squarePrototype
-            p#squareText
+            p.squareText
             button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
+            textarea.squareTextEdit(style='display : none')
     .squareContainer
         .square.squareAnon#sq1
-            p#squareText 
+            p.squareText Edit Me
+            textarea.squareTextEdit(style='display : none')
             button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
         .square.squareAnon#sq2
-            p#squareText 
+            p.squareText Edit Me
+            textarea.squareTextEdit(style='display : none')
             button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
 
             
