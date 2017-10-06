@@ -44,7 +44,10 @@ function getUserSqCount(userEmail){
 
 
 $(document).ready(function(){
+    //Booleans
     var userTyping = false;
+    var deleteMode = false
+
     makeDraggable('.squareAnon');
 
     //When a square is moved on another client
@@ -67,6 +70,11 @@ $(document).ready(function(){
     //When a square is retyped on another client
     socket.on('updateSquareText' , function(data){
         $(data.squareId).children('.squareText').text(data.text);
+    });
+
+    //When a square is deleted on another client
+    socket.on('deleteSquare' , function(data){
+        $(data.squareId).remove();
     });
 
     //When you create a new square
@@ -102,6 +110,33 @@ $(document).ready(function(){
       }
     });
 
+    //Delete When Press D
+    $(document).on("keydown", function(e){
+      if(e.which == 68 && userTyping == false){
+        var squareClass = ".sq-" + $('#userProf').text();
+        $(squareClass).css('box-shadow' , '0px 0px 5px red');
+        $('.squareAnon').css('box-shadow' , '0px 0px 5px red');
+        deleteMode = true;
+      }
+    });
+    $(document).on("keyup", function(e){
+      if(e.which == 68){
+        var squareClass = ".sq-"+$('#userProf').text();
+        $(squareClass).css('box-shadow' , '0px 0px 0px');
+        $('.squareAnon').css('box-shadow' , '0px 0px 0px');
+        deleteMode = false;
+      }
+    });
+    $(document).on('click' , '.square', function(){
+      //Holding down D and its an anon or user square
+      if(deleteMode && ($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon"))){
+        $(this).remove();
+        var squareId = '#'+$(this).attr('id');
+        socket.emit('deleteSquare' , {squareId : squareId})
+      }
+    })
+
+
     //Typing when DoubleClick
     $(document).on("dblclick" , ".square" , function(){
       if($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon")){
@@ -110,8 +145,6 @@ $(document).ready(function(){
         squareText.css('display' , 'none');
         squareTextEdit.focus();
         userTyping = true;
-      }else{
-        console.log("test");
       }
     });
     $('.squareTextEdit').blur(function(){
@@ -123,7 +156,8 @@ $(document).ready(function(){
       var squareId = "#" + squareText.parent().attr('id');
       socket.emit('updateSquareText' , {text : squareTextEditValue, squareId : squareId});
     });
-    autosize($('textarea'));
+
+    autosize($('.squareTextEdit'));
 
 
     //USER AUTHENITCATION
