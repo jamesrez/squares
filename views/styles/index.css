@@ -1,11 +1,14 @@
 .square{
     width : 100px;
-    height : 100px;
+    min-height : 100px;
+    height : auto;
     border : 2px solid black;
-    padding : 20px;
     background-color: white;
     position : absolute;
-    display : flex;
+    display : inline-flex;
+    align-content: space-between;
+    flex-flow: column wrap;
+    padding : 10px;
 }
 
 .squarePrototype{
@@ -42,7 +45,28 @@
 
 .color{
   width : 80%;
-  align-self : flex-end;
   margin-left: auto;
   margin-right: auto;
+  align-self: flex-end;
+}
+
+.squareText{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width : 90%;
+  height : auto;
+}
+
+.squareTextEdit{
+  text-align: center;
+  font-size: 14px;
+  border: none;
+  background-color: transparent;
+  resize: none;
+  outline: none;
+  margin-left: auto;
+  margin-right : auto;
+  width : 90%;
+  height : auto;
 }

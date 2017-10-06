@@ -14,6 +14,10 @@ module.exports = function(io){
             socket.broadcast.emit('updateSquareColor' , {color : data.color, id : data.id});
         });
 
+        socket.on('updateSquareText' , function(data){
+            socket.broadcast.emit('updateSquareText' , {text : data.text , squareId : data.squareId});
+        });
+
         socket.on('newSquare', function(data){
             io.sockets.emit('newSquare' , {user : data.user})
         });
