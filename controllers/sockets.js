@@ -3,7 +3,7 @@ module.exports = function(io){
 
 
         socket.on('updateSquarePos' , function(data){
-            socket.broadcast.emit('updateSquarePos', {pos : data.pos, id : data.id});
+            socket.broadcast.emit('updateSquarePos', {pos : data.pos, zIndex : data.zIndex, id : data.id});
         });
 
         socket.on('updateSquareSize' , function(data){
