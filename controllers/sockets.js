@@ -22,6 +22,10 @@ module.exports = function(io){
             io.sockets.emit('newSquare' , {user : data.user})
         });
 
+        socket.on('deleteSquare' , function(data){
+            socket.broadcast.emit('deleteSquare', {squareId : data.squareId});
+        });
+
 
     });
 }
