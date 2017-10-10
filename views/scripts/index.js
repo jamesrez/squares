@@ -3,9 +3,9 @@ var socket = io();
 //Update Colors
 function colorUpdate(jscolor){
   var newColor = '#'+jscolor;
-  var squareId = '#' + $(jscolor.styleElement).parent().attr('id');
+  var squareId = $(jscolor.styleElement).parent().attr('id');
   $(jscolor.styleElement).parent().css('background-color' , newColor);
-  socket.emit('updateSquareColor' , {color : newColor, id : squareId})
+  socket.emit('updateSquareColor' , {color : newColor, squareId : squareId})
 }
 
 //Make the squares draggable
@@ -17,7 +17,7 @@ function makeDraggable(squareClass){
                 var squarePos = $(this).offset();
                 var squareZ = $(this).css('z-index');
                 var squareId = $(this).attr('id');
-                socket.emit('updateSquarePos' , {pos : squarePos, zIndex : squareZ, id : squareId});
+                socket.emit('updateSquarePos' , {pos : squarePos, zIndex : squareZ, squareId : squareId});
             }
         });
         $(squareClass).resizable({
@@ -27,7 +27,7 @@ function makeDraggable(squareClass){
             var squareWidth = $(this).width();
             var squareHeight = $(this).height();
             var squareId = $(this).attr('id');
-            socket.emit('updateSquareSize' , {width : squareWidth, height :squareHeight, id:squareId});
+            socket.emit('updateSquareSize' , {width : squareWidth, height : squareHeight, squareId : squareId});
           }
         });
         jscolor.installByClassName("jscolor");
@@ -49,30 +49,58 @@ $(document).ready(function(){
     var userTyping = false;
     var deleteMode = false
 
+    //Load up those squares!
+    socket.emit('loadSquares');
+    socket.on('loadSquares' , function(data){
+      console.log(data);
+      //For each square in room
+      data.squares.forEach(function(square){
+        //Clone the prototype
+        var loadedSquare = $('.squarePrototype').clone(true);
+        //Add the squareid and owner + update Css + add to container
+        loadedSquare.attr('id' , square._id).addClass('sq-'+square.owner).addClass('square').css('display','flex').appendTo('.squareContainer');
+        loadedSquare.removeClass('squarePrototype');
+        //Load position
+        loadedSquare.offset(square.pos);
+        //Load the square's zIndex
+        loadedSquare.css('z-index' , square.zIndex);
+        //Load the square's size
+        loadedSquare.width(square.width);
+        loadedSquare.height(square.height);
+        //Load the square's color
+        loadedSquare.css('background-color' , square.color);
+        //Load the square's text
+        loadedSquare.children('.squareText').text(square.text);
+        //make it functionable
+        makeDraggable('.sq-'+ square.owner);
+      });
+    })
+
+    //Make the Anonymous Squares functionable
     makeDraggable('.squareAnon');
 
     //When a square is moved on another client
     socket.on('updateSquarePos' , function(data){
         //Update the square's offset position
-        $('#'+data.id).offset(data.pos);
+        $('#'+data.squareId).offset(data.pos);
         //Update the square's zIndex
-        $('#'+data.id).css('z-index' , data.zIndex);
+        $('#'+data.squareId).css('z-index' , data.zIndex);
     });
 
     //When a square is resized on another client
     socket.on('updateSquareSize' , function(data){
-        $('#'+data.id).width(data.width);
-        $('#'+data.id).height(data.height);
+        $('#'+data.squareId).width(data.width);
+        $('#'+data.squareId).height(data.height);
     });
 
     //When a square is recolored on another client
     socket.on('updateSquareColor' , function(data){
-        $(data.id).css('background-color' , data.color);
+        $('#'+data.squareId).css('background-color' , data.color);
     });
 
     //When a square is retyped on another client
     socket.on('updateSquareText' , function(data){
-        $(data.squareId).children('.squareText').text(data.text);
+        $('#'+data.squareId).children('.squareText').text(data.text);
     });
 
     //When a square is deleted on another client
@@ -89,8 +117,10 @@ $(document).ready(function(){
     socket.on('newSquare' , function(data){
         //Create a unique square id and create a new square
         var userSqCount = getUserSqCount(data.user);
+        //add owner name to class
         var newClass = "sq-"+data.user;
-        var newId = "sq-" + data.user + "-" + userSqCount;
+        //add mongoose model id to client attribute id
+        var newId = data.squareId;
         var newSquare = $('.squarePrototype').clone(true);
         newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
         newSquare.removeClass('squarePrototype');
@@ -156,7 +186,7 @@ $(document).ready(function(){
       var squareText = $(this).parent().children('p');
       squareText.css('display' , 'inline-block').text(squareTextEditValue);
       $(this).css('display' , 'none');
-      var squareId = "#" + squareText.parent().attr('id');
+      var squareId = squareText.parent().attr('id');
       socket.emit('updateSquareText' , {text : squareTextEditValue, squareId : squareId});
     });
 
