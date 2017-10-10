@@ -23,18 +23,25 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
 
 // required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(session({ secret: 'gingerissupercutelol' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 mongoose.connect(process.env.MONGO_URL, function(err){
-    //if(err) throw err;
+    if(err) throw err;
+    console.log('Connected to squares database.');
 });
 
+//Initialize Square Model and Socket Controller
+var Square = require('./models/square.js');
+require('./controllers/sockets.js')(io, Square);
+
 app.get('/', function(req,res){
-    res.render('index.jade', {curUser : req.user});
+    Square.find(function(err,squares){
+      res.render('index.jade', {curUser : req.user, squares : squares});
+    });
 });
 
 app.post('/register', passport.authenticate('local-signup', {
@@ -61,8 +68,5 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
-
-require('./controllers/sockets.js')(io);
-
 
 server.listen(port);
