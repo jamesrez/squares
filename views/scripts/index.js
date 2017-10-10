@@ -14,7 +14,7 @@ function makeDraggable(squareClass){
         $(squareClass).draggable({
             stack : ".square",
             drag : function(event, ui){
-                var squarePos = $(this).offset();
+                var squarePos = {top : $(this).css('top') , left : $(this).css('left')};
                 var squareZ = $(this).css('z-index');
                 var squareId = $(this).attr('id');
                 socket.emit('updateSquarePos' , {pos : squarePos, zIndex : squareZ, squareId : squareId});
@@ -52,7 +52,6 @@ $(document).ready(function(){
     //Load up those squares!
     socket.emit('loadSquares');
     socket.on('loadSquares' , function(data){
-      console.log(data);
       //For each square in room
       data.squares.forEach(function(square){
         //Clone the prototype
@@ -61,7 +60,8 @@ $(document).ready(function(){
         loadedSquare.attr('id' , square._id).addClass('sq-'+square.owner).addClass('square').css('display','flex').appendTo('.squareContainer');
         loadedSquare.removeClass('squarePrototype');
         //Load position
-        loadedSquare.offset(square.pos);
+        loadedSquare.css('top' , square.pos.top);
+        loadedSquare.css('left' , square.pos.left);
         //Load the square's zIndex
         loadedSquare.css('z-index' , square.zIndex);
         //Load the square's size
@@ -82,7 +82,9 @@ $(document).ready(function(){
     //When a square is moved on another client
     socket.on('updateSquarePos' , function(data){
         //Update the square's offset position
-        $('#'+data.squareId).offset(data.pos);
+        console.log(data);
+        $('#'+data.squareId).css('top' , data.pos.top);
+        $('#'+data.squareId).css('left' , data.pos.left);
         //Update the square's zIndex
         $('#'+data.squareId).css('z-index' , data.zIndex);
     });
