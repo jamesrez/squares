@@ -51,7 +51,9 @@ module.exports = function(io, Square){
 
         socket.on('deleteSquare' , function(data){
           socket.broadcast.emit('deleteSquare', {squareId : data.squareId});
-          Square.findByIdAndRemove(data.squareId);
+          Square.findByIdAndRemove(data.squareId, function(err){
+            if(err) console.log(err);
+          });
         });
 
 

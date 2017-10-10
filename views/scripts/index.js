@@ -71,6 +71,7 @@ $(document).ready(function(){
         loadedSquare.css('background-color' , square.color);
         //Load the square's text
         loadedSquare.children('.squareText').text(square.text);
+        autosize($('.squareTextEdit'));
         //make it functionable
         makeDraggable('.sq-'+ square.owner);
       });
@@ -107,7 +108,7 @@ $(document).ready(function(){
 
     //When a square is deleted on another client
     socket.on('deleteSquare' , function(data){
-        $(data.squareId).remove();
+        $('#'+data.squareId).remove();
     });
 
     //When you create a new square
@@ -126,6 +127,7 @@ $(document).ready(function(){
         var newSquare = $('.squarePrototype').clone(true);
         newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
         newSquare.removeClass('squarePrototype');
+        autosize($('.squareTextEdit'));
         makeDraggable('.'+ newClass);
     })
 
@@ -166,7 +168,7 @@ $(document).ready(function(){
       //Holding down D and its an anon or user square
       if(deleteMode && ($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon"))){
         $(this).remove();
-        var squareId = '#'+$(this).attr('id');
+        var squareId = $(this).attr('id');
         socket.emit('deleteSquare' , {squareId : squareId})
       }
     })
