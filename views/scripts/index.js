@@ -8,12 +8,27 @@ function colorUpdate(jscolor){
   socket.emit('updateSquareColor' , {color : newColor, squareId : squareId})
 }
 
+var zoomScale = 1.0;
+
 //Make the squares draggable
 function makeDraggable(squareClass){
     if((squareClass == ".sq-" + $('#userProf').text()) || squareClass == ".squareAnon"){
         $(squareClass).draggable({
             stack : ".square",
+            start: function(event, ui) {
+                ui.position.left = 0;
+                ui.position.top = 0;
+            },
             drag : function(event, ui){
+                var changeLeft = ui.position.left - ui.originalPosition.left; // find change in left
+                var newLeft = ui.originalPosition.left + changeLeft / (( zoomScale)); // adjust new left by our zoomScale
+
+                var changeTop = ui.position.top - ui.originalPosition.top; // find change in top
+                var newTop = ui.originalPosition.top + changeTop / zoomScale; // adjust new top by our zoomScale
+
+                ui.position.left = newLeft;
+                ui.position.top = newTop;
+
                 var squarePos = {top : $(this).css('top') , left : $(this).css('left')};
                 var squareZ = $(this).css('z-index');
                 var squareId = $(this).attr('id');
@@ -22,6 +37,16 @@ function makeDraggable(squareClass){
         });
         $(squareClass).resizable({
           resize : function(event,ui){
+
+            var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+            var newWidth = ui.originalSize.width + changeWidth / zoomScale; // adjust new width by our zoomScale
+
+            var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+            var newHeight = ui.originalSize.height + changeHeight / zoomScale; // adjust new height by our zoomScale
+
+            ui.size.width = newWidth;
+            ui.size.height = newHeight;
+
             $(this).css('min-height' , "1px");
             //$(this).css('min-width' , "1px");
             var squareWidth = $(this).width();
@@ -79,6 +104,68 @@ $(document).ready(function(){
 
     //Make the Anonymous Squares functionable
     makeDraggable('.squareAnon');
+
+
+    //Zoom Out when press Q
+    var qPressed = false;
+    $(document).on("keydown", function(e){
+      if(e.which == 81 && userTyping == false && qPressed == false){
+        qPressed = true;
+        $('.squareContainer').velocity({
+          "scale" : "-=.2",
+        }, 500);
+        zoomScale -= 0.2;
+      }
+    });
+    $(document).on("keyup", function(e){
+      if(e.which == 81 && userTyping == false && qPressed == true){
+        qPressed = false;
+      }
+    });
+
+    //Zoom In when press E
+    var ePressed = false;
+    $(document).on("keydown", function(e){
+      if(e.which == 69 && userTyping == false && ePressed == false){
+        ePressed = true;
+        $('.squareContainer').velocity({
+          "scale" : "+=.2",
+        }, 500);
+        zoomScale += 0.2;
+      }
+    });
+    $(document).on("keyup", function(e){
+      if(e.which == 69 && userTyping == false && ePressed == true){
+        ePressed = false;
+      }
+    });
+
+
+    //KEY MOVEMENT (It just works, don't worry about it)
+    box = $('.squareContainer'),
+    keysPressed = {},
+    distancePerIteration = 10;
+
+    function calculateNewValue(oldValue, keyCode1, keyCode2) {
+        var newValue = parseInt(oldValue, 10)
+                       - (keysPressed[keyCode1] ? distancePerIteration : 0)
+                       + (keysPressed[keyCode2] ? distancePerIteration : 0);
+        return newValue;
+    }
+
+    $(window).keydown(function(event) { keysPressed[event.which] = true; });
+    $(window).keyup(function(event) { keysPressed[event.which] = false; });
+
+    setInterval(function() {
+        box.css({
+            left: function(index ,oldValue) {
+                return calculateNewValue(oldValue, 68, 65);
+            },
+            top: function(index, oldValue) {
+                return calculateNewValue(oldValue, 83, 87);
+            }
+        });
+    }, 20);
 
     //When a square is moved on another client
     socket.on('updateSquarePos' , function(data){

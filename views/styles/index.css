@@ -1,3 +1,19 @@
+/*body {
+  -moz-transform: scale(0.8, 0.8); /* Moz-browsers */
+/*  zoom: 0.8; /* Other non-webkit browsers */
+/*  zoom: 80%; /* Webkit browsers */
+/*} */
+
+.squareContainer {
+  position : absolute;
+  -moz-transform: scale(1.0, 1.0);
+  transform: scale(1.0, 1.0);
+  -webkit-transform-origin : 0 0;
+  -moz-transform-origin : 0 0;
+  /*transition : all 2s;
+  -moz-transition: all 2s;*/
+}
+
 .square{
     width : 100px;
     min-height : 100px;
@@ -9,6 +25,9 @@
     align-content: space-between;
     flex-flow: column wrap;
     padding : 10px;
+    transform-origin : 0 0;
+    -webkit-transform-origin : 0 0;
+    -moz-transform-origin : 0 0;
 }
 
 .squarePrototype{
