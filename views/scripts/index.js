@@ -74,8 +74,8 @@ $(document).ready(function(){
     var userTyping = false;
     var deleteMode = false
 
-    //Load up those squares!
-    socket.emit('loadSquares');
+//Load up those squares!
+    socket.emit('loadSquares', {roomName : $('#roomName').text()});
     socket.on('loadSquares' , function(data){
       //For each square in room
       data.squares.forEach(function(square){
@@ -102,11 +102,11 @@ $(document).ready(function(){
       });
     })
 
-    //Make the Anonymous Squares functionable
+//Make the Anonymous Squares functionable
     makeDraggable('.squareAnon');
 
 
-    //Zoom Out when press Q
+//Zoom Out when press Q
     var qPressed = false;
     $(document).on("keydown", function(e){
       if(e.which == 81 && userTyping == false && qPressed == false){
@@ -123,7 +123,7 @@ $(document).ready(function(){
       }
     });
 
-    //Zoom In when press E
+//Zoom In when press E
     var ePressed = false;
     $(document).on("keydown", function(e){
       if(e.which == 69 && userTyping == false && ePressed == false){
@@ -141,16 +141,18 @@ $(document).ready(function(){
     });
 
 
-    //KEY MOVEMENT (It just works, don't worry about it)
+//WASD MOVEMENT (It just works, don't worry about it)
     box = $('.squareContainer'),
     keysPressed = {},
     distancePerIteration = 10;
 
     function calculateNewValue(oldValue, keyCode1, keyCode2) {
-        var newValue = parseInt(oldValue, 10)
-                       - (keysPressed[keyCode1] ? distancePerIteration : 0)
-                       + (keysPressed[keyCode2] ? distancePerIteration : 0);
-        return newValue;
+        if(!userTyping){
+            var newValue = parseInt(oldValue, 10)
+                           - (keysPressed[keyCode1] ? distancePerIteration : 0)
+                           + (keysPressed[keyCode2] ? distancePerIteration : 0);
+            return newValue;
+        }
     }
 
     $(window).keydown(function(event) { keysPressed[event.which] = true; });
@@ -167,7 +169,7 @@ $(document).ready(function(){
         });
     }, 20);
 
-    //When a square is moved on another client
+//When a square is moved on another client
     socket.on('updateSquarePos' , function(data){
         //Update the square's offset position
         console.log(data);
@@ -177,33 +179,45 @@ $(document).ready(function(){
         $('#'+data.squareId).css('z-index' , data.zIndex);
     });
 
-    //When a square is resized on another client
+//When a square is resized on another client
     socket.on('updateSquareSize' , function(data){
         $('#'+data.squareId).width(data.width);
         $('#'+data.squareId).height(data.height);
     });
 
-    //When a square is recolored on another client
+//When a square is recolored on another client
     socket.on('updateSquareColor' , function(data){
         $('#'+data.squareId).css('background-color' , data.color);
     });
 
-    //When a square is retyped on another client
+//When a square is retyped on another client
     socket.on('updateSquareText' , function(data){
         $('#'+data.squareId).children('.squareText').text(data.text);
     });
 
-    //When a square is deleted on another client
+//When a square is deleted on another client
     socket.on('deleteSquare' , function(data){
         $('#'+data.squareId).remove();
     });
 
-    //When you create a new square
-    $('#newSquareBtn').click(function(){
-        //Send username to server
-        socket.emit('newSquare', {user : $('#userProf').text()});
+//When you create a new square
+
+    //Save Mouse Position
+    var mouseX = 0;
+    var mouseY = 0;
+    $(document).mousemove(function(e){
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+    })
+
+    //When press space
+    $(document).on('keydown', function(e){
+        if(e.which == 32 && userTyping == false){
+            var roomName = $('#roomName').text();
+            socket.emit('newSquare', {user : $('#userProf').text(), roomName : roomName, mouseX : mouseX, mouseY : mouseY});
+        }
     });
-    //When a client makes a new square
+//When a client makes a new square
     socket.on('newSquare' , function(data){
         //Create a unique square id and create a new square
         var userSqCount = getUserSqCount(data.user);
@@ -214,11 +228,14 @@ $(document).ready(function(){
         var newSquare = $('.squarePrototype').clone(true);
         newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
         newSquare.removeClass('squarePrototype');
+        console.log(data.mouseY);
+        newSquare.css('top', mouseY - 50);
+        newSquare.css('left', mouseX - 50);
         autosize($('.squareTextEdit'));
         makeDraggable('.'+ newClass);
     })
 
-    //Color When Press C
+//Color When Press C
     $(document).on("keydown", function(e){
       if(e.which == 67 && userTyping == false){
         var squareClass = ".sq-" + $('#userProf').text();
@@ -234,9 +251,9 @@ $(document).ready(function(){
       }
     });
 
-    //Delete When Press D
+//Delete When Press D
     $(document).on("keydown", function(e){
-      if(e.which == 68 && userTyping == false){
+      if(e.which == 70 && userTyping == false){
         var squareClass = ".sq-" + $('#userProf').text();
         $(squareClass).css('box-shadow' , '0px 0px 5px red');
         $('.squareAnon').css('box-shadow' , '0px 0px 5px red');
@@ -244,7 +261,7 @@ $(document).ready(function(){
       }
     });
     $(document).on("keyup", function(e){
-      if(e.which == 68){
+      if(e.which == 70){
         var squareClass = ".sq-"+$('#userProf').text();
         $(squareClass).css('box-shadow' , '0px 0px 0px');
         $('.squareAnon').css('box-shadow' , '0px 0px 0px');
@@ -256,12 +273,13 @@ $(document).ready(function(){
       if(deleteMode && ($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon"))){
         $(this).remove();
         var squareId = $(this).attr('id');
-        socket.emit('deleteSquare' , {squareId : squareId})
+        var roomName = $('#roomName').text();
+        socket.emit('deleteSquare' , {squareId : squareId, roomName : roomName});
       }
-    })
+  });
 
 
-    //Typing when DoubleClick
+//Typing when DoubleClick
     $(document).on("dblclick" , ".square" , function(){
       if($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon")){
         var squareText = $(this).children('p');
@@ -283,8 +301,22 @@ $(document).ready(function(){
 
     autosize($('.squareTextEdit'));
 
+//Making and Going to ROOMS
+    $('.roomInputBtn').click(function(){
+        var roomInput = ($('#roomInput').val()) ? $('#roomInput').val() : 'Main';
+        window.location = ('/room/'+roomInput);
+    });
 
-    //USER AUTHENITCATION
+
+//USER AUTHENITCATION
+
+    $('input').focus(function(){
+        userTyping = true;
+    });
+    $('input').blur(function(){
+        userTyping = false;
+    });
+
     $('#register').click(function(){
         $.post('/register', {username : $('#username').val() , password : $('#password').val()}, function(){
             location.reload();

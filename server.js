@@ -23,7 +23,7 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
 
 // required for passport
-app.use(session({ secret: 'gingerissupercutelol' })); // session secret
+app.use(session({secret: process.env.SESSION_SECRET})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -36,12 +36,38 @@ mongoose.connect(process.env.MONGO_URL, function(err){
 
 //Initialize Square Model and Socket Controller
 var Square = require('./models/square.js');
-require('./controllers/sockets.js')(io, Square);
+var Room = require('./models/room.js');
+require('./controllers/sockets.js')(io, Square, Room);
 
 app.get('/', function(req,res){
-    Square.find(function(err,squares){
-      res.render('index.jade', {curUser : req.user, squares : squares});
+    Room.findOne({name:'Main'}, function(err,room){
+        if(!room){
+            var mainRoom = new Room;
+            mainRoom.name = "Main";
+            mainRoom.owner = "James";
+            mainRoom.squares = [];
+            mainRoom.save(function(err,thisRoom){
+                res.render('index.jade' , {curUser : req.user, room : thisRoom});
+            });
+        }else{
+            res.render('index.jade', {curUser : req.user, room : room});
+        }
     });
+});
+
+app.get('/room/:name', function(req,res){
+    Room.findOne({name: req.params.name}, function(err,room){
+        if(!room){
+            var newRoom = new Room;
+            newRoom.name = req.params.name;
+            newRoom.squares = [];
+            newRoom.save(function(err,thisRoom){
+                res.render('index.jade', {curUser : req.user, room : thisRoom});
+            });
+        }else{
+            res.render('index.jade', {curUser : req.user, room : room});
+        }
+    })
 });
 
 app.post('/register', passport.authenticate('local-signup', {

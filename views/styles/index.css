@@ -4,6 +4,10 @@
 /*  zoom: 80%; /* Webkit browsers */
 /*} */
 
+*{
+    font-style: helvetica;
+}
+
 .squareContainer {
   position : absolute;
   -moz-transform: scale(1.0, 1.0);
@@ -46,14 +50,36 @@
 }
 
 .nav{
+  position : fixed;
+  z-index : 1000000;
+  width : 95%;
+}
+
+.nav-right{
     float : right;
 }
 
-.nav p{
+.nav-right p{
     text-decoration: underline;
     margin : 0px 5px;
     display: inline;
     cursor : pointer;
+}
+
+.nav-left{
+  float : left;
+}
+
+#roomInput{
+  font-size : 16px;
+}
+
+.roomInputBtn{
+  display : inline-block;
+  background-color : #E8E6E6;
+  padding : 5px;
+  border-radius : 6px;
+  margin-left: 5px;
 }
 
 #newSquareBtn{
@@ -88,4 +114,18 @@
   margin-right : auto;
   width : 90%;
   height : auto;
+}
+
+.hintsContainer{
+    padding : 20px;
+    position : fixed;
+    bottom : 0;
+    left : 0;
+    pointer-events: none;
+}
+
+#hintHeader{
+    font-size: 25px;
+    text-decoration: underline;
+    text-align: center;
 }
