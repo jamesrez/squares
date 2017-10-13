@@ -1,9 +1,12 @@
-module.exports = function(io, Square){
+module.exports = function(io, Square, Room){
     io.on('connection' , function(socket){
 
-        socket.on('loadSquares' , function(){
-          Square.find({}, function(err, squares){
-            socket.emit('loadSquares' , {squares : squares});
+        socket.on('loadSquares' , function(data){
+          var roomName = data.roomName;
+          Room.findOne({name:roomName}, function(err,room){
+              Square.find({'_id': { $in: room.squares}}, function(err,squares){
+                  socket.emit('loadSquares' , {squares : squares});
+              });
           });
         });
 
@@ -44,8 +47,13 @@ module.exports = function(io, Square){
         socket.on('newSquare', function(data){
           var newSquare = new Square;
           newSquare.owner = data.user;
+          newSquare.pos = {top : (data.mouseY - 50), left : (data.mouseX - 50)};
           newSquare.save(function(err, thisSquare){
-            io.sockets.emit('newSquare' , {user : data.user, squareId : thisSquare._id});
+            Room.findOne({name:data.roomName}, function(err, room){
+                room.squares.push(thisSquare._id);
+                room.save();
+                io.sockets.emit('newSquare' , {user : data.user, squareId : thisSquare._id});
+            })
           });
         });
 
@@ -53,6 +61,11 @@ module.exports = function(io, Square){
           socket.broadcast.emit('deleteSquare', {squareId : data.squareId});
           Square.findByIdAndRemove(data.squareId, function(err){
             if(err) console.log(err);
+            Room.findOne({name : data.roomName}, function(err,room){
+                squareIndex = room.squares.indexOf(data.squareId);
+                room.squares.splice(squareIndex,1);
+                room.save();
+            })
           });
         });
 
