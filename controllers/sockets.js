@@ -1,5 +1,9 @@
-module.exports = function(io, Square, Room){
+function socketController(io, Square, Room){
     io.on('connection' , function(socket){
+
+        socket.on('joinRoom', function(data){
+            socket.join(data.roomName);
+        });
 
         socket.on('loadSquares' , function(data){
           var roomName = data.roomName;
@@ -11,7 +15,7 @@ module.exports = function(io, Square, Room){
         });
 
         socket.on('updateSquarePos' , function(data){
-          socket.broadcast.emit('updateSquarePos', {pos : data.pos, zIndex : data.zIndex, squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('updateSquarePos', {pos : data.pos, zIndex : data.zIndex, squareId : data.squareId});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.pos = data.pos;
             thisSquare.zIndex = data.zIndex;
@@ -20,7 +24,7 @@ module.exports = function(io, Square, Room){
         });
 
         socket.on('updateSquareSize' , function(data){
-          socket.broadcast.emit('updateSquareSize', {width : data.width, height : data.height, squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('updateSquareSize', {width : data.width, height : data.height, squareId : data.squareId});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.width = data.width;
             thisSquare.height = data.height;
@@ -29,7 +33,7 @@ module.exports = function(io, Square, Room){
         });
 
         socket.on('updateSquareColor' , function(data){
-          socket.broadcast.emit('updateSquareColor' , {color : data.color, squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('updateSquareColor' , {color : data.color, squareId : data.squareId});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.color = data.color;
             thisSquare.save();
@@ -37,7 +41,7 @@ module.exports = function(io, Square, Room){
         });
 
         socket.on('updateSquareText' , function(data){
-          socket.broadcast.emit('updateSquareText' , {text : data.text , squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('updateSquareText' , {text : data.text , squareId : data.squareId});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.text = data.text;
             thisSquare.save();
@@ -52,13 +56,13 @@ module.exports = function(io, Square, Room){
             Room.findOne({name:data.roomName}, function(err, room){
                 room.squares.push(thisSquare._id);
                 room.save();
-                io.sockets.emit('newSquare' , {user : data.user, squareId : thisSquare._id});
-            })
+                io.sockets.in(data.roomName).emit('newSquare' , {user : data.user, squareId : thisSquare._id});
+            });
           });
         });
 
         socket.on('deleteSquare' , function(data){
-          socket.broadcast.emit('deleteSquare', {squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('deleteSquare', {squareId : data.squareId});
           Square.findByIdAndRemove(data.squareId, function(err){
             if(err) console.log(err);
             Room.findOne({name : data.roomName}, function(err,room){
@@ -69,6 +73,7 @@ module.exports = function(io, Square, Room){
           });
         });
 
-
     });
 }
+
+module.exports = {socketController};

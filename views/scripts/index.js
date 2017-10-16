@@ -5,7 +5,7 @@ function colorUpdate(jscolor){
   var newColor = '#'+jscolor;
   var squareId = $(jscolor.styleElement).parent().attr('id');
   $(jscolor.styleElement).parent().css('background-color' , newColor);
-  socket.emit('updateSquareColor' , {color : newColor, squareId : squareId})
+  socket.emit('updateSquareColor' , {color : newColor, squareId : squareId, roomName : $('#roomName').text()})
 }
 
 var zoomScale = 1.0;
@@ -32,7 +32,7 @@ function makeDraggable(squareClass){
                 var squarePos = {top : $(this).css('top') , left : $(this).css('left')};
                 var squareZ = $(this).css('z-index');
                 var squareId = $(this).attr('id');
-                socket.emit('updateSquarePos' , {pos : squarePos, zIndex : squareZ, squareId : squareId});
+                socket.emit('updateSquarePos' , {pos : squarePos, zIndex : squareZ, squareId : squareId, roomName : $('#roomName').text()});
             }
         });
         $(squareClass).resizable({
@@ -52,7 +52,7 @@ function makeDraggable(squareClass){
             var squareWidth = $(this).width();
             var squareHeight = $(this).height();
             var squareId = $(this).attr('id');
-            socket.emit('updateSquareSize' , {width : squareWidth, height : squareHeight, squareId : squareId});
+            socket.emit('updateSquareSize' , {width : squareWidth, height : squareHeight, squareId : squareId, roomName : $('#roomName').text()});
           }
         });
         jscolor.installByClassName("jscolor");
@@ -73,6 +73,9 @@ $(document).ready(function(){
     //Booleans
     var userTyping = false;
     var deleteMode = false
+
+//Join Socket Room
+    socket.emit('joinRoom', {roomName : $('#roomName').text()});
 
 //Load up those squares!
     socket.emit('loadSquares', {roomName : $('#roomName').text()});
@@ -172,7 +175,6 @@ $(document).ready(function(){
 //When a square is moved on another client
     socket.on('updateSquarePos' , function(data){
         //Update the square's offset position
-        console.log(data);
         $('#'+data.squareId).css('top' , data.pos.top);
         $('#'+data.squareId).css('left' , data.pos.left);
         //Update the square's zIndex
@@ -228,7 +230,6 @@ $(document).ready(function(){
         var newSquare = $('.squarePrototype').clone(true);
         newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
         newSquare.removeClass('squarePrototype');
-        console.log(data.mouseY);
         newSquare.css('top', mouseY - 50);
         newSquare.css('left', mouseX - 50);
         autosize($('.squareTextEdit'));
@@ -296,7 +297,7 @@ $(document).ready(function(){
       squareText.css('display' , 'inline-block').text(squareTextEditValue);
       $(this).css('display' , 'none');
       var squareId = squareText.parent().attr('id');
-      socket.emit('updateSquareText' , {text : squareTextEditValue, squareId : squareId});
+      socket.emit('updateSquareText' , {text : squareTextEditValue, squareId : squareId, roomName : $('#roomName').text()});
     });
 
     autosize($('.squareTextEdit'));
