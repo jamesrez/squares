@@ -10,6 +10,8 @@ function colorUpdate(jscolor){
 
 var zoomScale = 1.0;
 
+var resizeToggle = false;
+
 //Make the squares draggable
 function makeDraggable(squareClass){
     if((squareClass == ".sq-" + $('#userProf').text()) || squareClass == ".squareAnon"){
@@ -36,6 +38,7 @@ function makeDraggable(squareClass){
             }
         });
         $(squareClass).resizable({
+          disabled : true,
           resize : function(event,ui){
 
             var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
@@ -108,6 +111,21 @@ $(document).ready(function(){
 //Make the Anonymous Squares functionable
     makeDraggable('.squareAnon');
 
+
+
+//Resize Squares when press R
+    $(document).on("keydown", function(e){
+        if(e.which == 82){
+            var squareClass = ".sq-"+$('#userProf').text();
+            if(resizeToggle){
+                $(squareClass).resizable("option", "disabled", true);
+                resizeToggle = false;
+            }else{
+                $(squareClass).resizable("option", "disabled", false);
+                resizeToggle = true;
+            }
+        }
+    });
 
 //Zoom Out when press Q
     var qPressed = false;
@@ -308,6 +326,19 @@ $(document).ready(function(){
         window.location = ('/room/'+roomInput);
     });
 
+//Hiding the hints
+    var showHints = true
+    $(document).on("keydown", function(e){
+        if(e.which == 72){
+            if(showHints){
+                $('.hintsContainer').css('display', 'none');
+                showHints = false;
+            }else{
+                $('.hintsContainer').css('display', 'block');    
+                showHints = true;
+            }
+        }
+    })
 
 //USER AUTHENITCATION
 

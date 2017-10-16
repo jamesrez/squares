@@ -16,14 +16,13 @@ block body
                   p#login Login
                   p#register Register
           else
-              button#newSquareBtn New Square
               p#userProf=curUser.username
               p#logout Logout
       .nav-left
-          h3#roomName=room.name
-          if(curUser)
-              input#roomInput(name='roomname' type='text' placeholder='Room Name')
-              a.roomInputBtn Go To Room
+          h3#roomNameLabel=("Room: " + room.name)
+          #roomName=room.name
+          input#roomInput(name='roomname' type='text' placeholder='Room Name')
+          a.roomInputBtn Go To Room
     .squareContainer
       .squarePrototype
           p.squareText
@@ -32,13 +31,17 @@ block body
     
     .hintsContainer
         h1#hintHeader Hints
+        p H to Hide Hints
         if(!curUser)
             p Register to Make Squares 
+            p WASD Move Camera
+            p Q/E Zoom Out/In
         else
             p Space to Create a Square
             p C to Color Squares
             p F to Delete Squares
             p DoubleClick Squares to Add text
-            p Feel Free to Move and Resize your Squares
+            p Drag Squares to Move Them
+            p R to toggle Resize Arrow
             p WASD Move Camera
             p Q/E Zoom Out/In
