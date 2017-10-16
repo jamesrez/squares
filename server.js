@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URL, function(err){
 //Initialize Square Model and Socket Controller
 var Square = require('./models/square.js');
 var Room = require('./models/room.js');
-require('./controllers/sockets.js')(io, Square, Room);
+require('./controllers/sockets.js').socketController(io, Square, Room);
 
 app.get('/', function(req,res){
     Room.findOne({name:'Main'}, function(err,room){
