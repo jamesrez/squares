@@ -248,8 +248,8 @@ $(document).ready(function(){
         var newSquare = $('.squarePrototype').clone(true);
         newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
         newSquare.removeClass('squarePrototype');
-        newSquare.css('top', mouseY - 50);
-        newSquare.css('left', mouseX - 50);
+        newSquare.css('top', data.pos.top);
+        newSquare.css('left', data.pos.left);
         autosize($('.squareTextEdit'));
         makeDraggable('.'+ newClass);
     })
@@ -334,7 +334,7 @@ $(document).ready(function(){
                 $('.hintsContainer').css('display', 'none');
                 showHints = false;
             }else{
-                $('.hintsContainer').css('display', 'block');    
+                $('.hintsContainer').css('display', 'block');
                 showHints = true;
             }
         }

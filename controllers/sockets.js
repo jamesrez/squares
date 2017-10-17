@@ -56,7 +56,7 @@ function socketController(io, Square, Room){
             Room.findOne({name:data.roomName}, function(err, room){
                 room.squares.push(thisSquare._id);
                 room.save();
-                io.sockets.in(data.roomName).emit('newSquare' , {user : data.user, squareId : thisSquare._id});
+                io.sockets.in(data.roomName).emit('newSquare' , {user : data.user, squareId : thisSquare._id, pos : thisSquare.pos});
             });
           });
         });
