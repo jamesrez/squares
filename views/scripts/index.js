@@ -226,6 +226,7 @@ $(document).ready(function(){
     var mouseX = 0;
     var mouseY = 0;
     $(document).mousemove(function(e){
+        var bodyOffsets = document.body.getBoundingClientRect();
         mouseX = e.pageX;
         mouseY = e.pageY;
     })
@@ -233,6 +234,7 @@ $(document).ready(function(){
     //When press space
     $(document).on('keydown', function(e){
         if(e.which == 32 && userTyping == false){
+            e.preventDefault();
             var roomName = $('#roomName').text();
             socket.emit('newSquare', {user : $('#userProf').text(), roomName : roomName, mouseX : mouseX, mouseY : mouseY});
         }
