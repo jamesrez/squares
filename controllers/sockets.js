@@ -51,7 +51,7 @@ function socketController(io, Square, Room){
         socket.on('newSquare', function(data){
           var newSquare = new Square;
           newSquare.owner = data.user;
-          newSquare.pos = {top : (data.mouseY - 50), left : (data.mouseX - 50)};
+          newSquare.pos = {top : (data.mouseY), left : (data.mouseX)};
           newSquare.save(function(err, thisSquare){
             Room.findOne({name:data.roomName}, function(err, room){
                 room.squares.push(thisSquare._id);
