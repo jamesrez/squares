@@ -96,6 +96,7 @@ $(document).ready(function(){
         //Load the square's zIndex
         loadedSquare.css('z-index' , square.zIndex);
         //Load the square's size
+        loadedSquare.css('min-height' , "1px");
         loadedSquare.width(square.width);
         loadedSquare.height(square.height);
         //Load the square's color
@@ -188,6 +189,9 @@ $(document).ready(function(){
                 return calculateNewValue(oldValue, 83, 87);
             }
         });
+        mouseX = calculateNewValue(mouseX, 65, 68);
+        mouseY = calculateNewValue(mouseY, 87, 83);
+
     }, 20);
 
 //When a square is moved on another client
@@ -227,13 +231,13 @@ $(document).ready(function(){
     var mouseY = 0;
     $(document).mousemove(function(e){
         var bodyOffsets = document.body.getBoundingClientRect();
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-    })
+        mouseX = e.pageX - $('.squareContainer').offset().left;
+        mouseY = e.pageY - $('.squareContainer').offset().top;
+    });
 
     //When press space
     $(document).on('keydown', function(e){
-        if(e.which == 32 && userTyping == false){
+        if(e.which == 32 && userTyping == false && $('#userProf').text()){
             e.preventDefault();
             var roomName = $('#roomName').text();
             socket.emit('newSquare', {user : $('#userProf').text(), roomName : roomName, mouseX : mouseX, mouseY : mouseY});
@@ -248,10 +252,11 @@ $(document).ready(function(){
         //add mongoose model id to client attribute id
         var newId = data.squareId;
         var newSquare = $('.squarePrototype').clone(true);
-        newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
-        newSquare.removeClass('squarePrototype');
         newSquare.css('top', data.pos.top);
         newSquare.css('left', data.pos.left);
+        newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
+        newSquare.removeClass('squarePrototype');
+        newSquare.css('min-height' , "1px");
         autosize($('.squareTextEdit'));
         makeDraggable('.'+ newClass);
     })
