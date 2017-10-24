@@ -237,10 +237,12 @@ $(document).ready(function(){
 
     //When press space
     $(document).on('keydown', function(e){
-        if(e.which == 32 && userTyping == false && $('#userProf').text()){
-            e.preventDefault();
-            var roomName = $('#roomName').text();
-            socket.emit('newSquare', {user : $('#userProf').text(), roomName : roomName, mouseX : mouseX, mouseY : mouseY});
+        if(e.which == 32){
+          e.preventDefault();
+          if(userTyping == false && $('#userProf').text()){
+              var roomName = $('#roomName').text();
+              socket.emit('newSquare', {user : $('#userProf').text(), roomName : roomName, mouseX : mouseX, mouseY : mouseY});
+          }
         }
     });
 //When a client makes a new square
@@ -257,6 +259,7 @@ $(document).ready(function(){
         newSquare.attr('id' , newId).addClass(newClass).addClass('square').css('display','flex').appendTo('.squareContainer');
         newSquare.removeClass('squarePrototype');
         newSquare.css('min-height' , "1px");
+        newSquare.css({width : '100px', height : '100px'});
         autosize($('.squareTextEdit'));
         makeDraggable('.'+ newClass);
     })
