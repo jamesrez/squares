@@ -28,6 +28,9 @@ block body
           p.squareText
           button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
           textarea.squareTextEdit(style='display : none')
+          input.imgEdit(type="text" name="imageSrc" placeholder="Image URL")
+          button.imgEditBtn Use Image
+          img.squareImg
     
     .hintsContainer
         h1#hintHeader Hints
@@ -41,6 +44,7 @@ block body
             p C to Color Squares
             p F to Delete Squares
             p DoubleClick Squares to Add text
+            p I to Add Image to Squares
             p Drag Squares to Move Them
             p R to toggle Resize Arrow
             p WASD Move Camera

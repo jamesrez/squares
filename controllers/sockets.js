@@ -24,7 +24,7 @@ function socketController(io, Square, Room){
         });
 
         socket.on('updateSquareSize' , function(data){
-          socket.broadcast.to(data.roomName).emit('updateSquareSize', {width : data.width, height : data.height, squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('updateSquareSize', {width : data.width, height : data.height, imageWidth : data.imageWidth, imageHeight : data.imageHeight, squareId : data.squareId});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.width = data.width;
             thisSquare.height = data.height;
@@ -44,6 +44,14 @@ function socketController(io, Square, Room){
           socket.broadcast.to(data.roomName).emit('updateSquareText' , {text : data.text , squareId : data.squareId});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.text = data.text;
+            thisSquare.save();
+          });
+        });
+
+        socket.on('updateSquareImage', function(data){
+          socket.broadcast.to(data.roomName).emit('updateSquareImage' , {imageSrc : data.imageSrc, squareId : data.squareId});
+          Square.findById(data.squareId, function(err, thisSquare){
+            thisSquare.imageSrc = data.imageSrc;
             thisSquare.save();
           });
         });
