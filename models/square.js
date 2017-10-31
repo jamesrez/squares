@@ -7,7 +7,8 @@ var squareSchema = mongoose.Schema({
   zIndex : Number,
   text : String,
   color : String,
-  owner : String
+  owner : String,
+  imageSrc : String
 });
 var Square = mongoose.model("Square" , squareSchema);
 

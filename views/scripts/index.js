@@ -54,8 +54,17 @@ function makeDraggable(squareClass){
             //$(this).css('min-width' , "1px");
             var squareWidth = $(this).width();
             var squareHeight = $(this).height();
+
+            var squareImgHeight = 0.80 * squareHeight;
+            var squareImgWidth = 0.80 * squareWidth;
+
+            if($(this).children('.squareImg').attr('src')){
+              $(this).children('.squareImg').height(squareImgHeight);
+              $(this).children('.squareImg').width(squareImgWidth);
+            }
+
             var squareId = $(this).attr('id');
-            socket.emit('updateSquareSize' , {width : squareWidth, height : squareHeight, squareId : squareId, roomName : $('#roomName').text()});
+            socket.emit('updateSquareSize' , {width : squareWidth, height : squareHeight, imageWidth : squareImgWidth, imageHeight : squareImgHeight, squareId : squareId, roomName : $('#roomName').text()});
           }
         });
         jscolor.installByClassName("jscolor");
@@ -103,6 +112,11 @@ $(document).ready(function(){
         loadedSquare.css('background-color' , square.color);
         //Load the square's text
         loadedSquare.children('.squareText').text(square.text);
+        if(square.imageSrc){
+          loadedSquare.children('.squareImg').attr('src', square.imageSrc);
+          loadedSquare.children('.squareImg').height(0.8 * square.height);
+          loadedSquare.children('.squareImg').width(0.8 * square.width);
+        }
         autosize($('.squareTextEdit'));
         //make it functionable
         makeDraggable('.sq-'+ square.owner);
@@ -207,6 +221,8 @@ $(document).ready(function(){
     socket.on('updateSquareSize' , function(data){
         $('#'+data.squareId).width(data.width);
         $('#'+data.squareId).height(data.height);
+        $('#'+data.squareId).children('.squareImg').width(data.imageWidth);
+        $('#'+data.squareId).children('.squareImg').height(data.imageHeight);
     });
 
 //When a square is recolored on another client
@@ -217,6 +233,13 @@ $(document).ready(function(){
 //When a square is retyped on another client
     socket.on('updateSquareText' , function(data){
         $('#'+data.squareId).children('.squareText').text(data.text);
+    });
+
+//When a square gets an image on another client
+    socket.on('updateSquareImage' , function(data){
+        $('#'+data.squareId).children('.squareImg').attr('src', data.imageSrc);
+        $('#'+data.squareId).children('.squareImg').height(0.8 * $('#'+data.squareId).height());
+        $('#'+data.squareId).children('.squareImg').width(0.8 * $('#'+data.squareId).width());
     });
 
 //When a square is deleted on another client
@@ -237,7 +260,7 @@ $(document).ready(function(){
 
     //When press space
     $(document).on('keydown', function(e){
-        if(e.which == 32){
+        if(e.which == 32 && userTyping == false){
           e.preventDefault();
           if(userTyping == false && $('#userProf').text()){
               var roomName = $('#roomName').text();
@@ -278,6 +301,35 @@ $(document).ready(function(){
         $(squareClass).children('.color').css('display' , 'none');
         $('.squareAnon').children('.color').css('display' , 'none');
       }
+    });
+
+  //IMAGES
+    //Image Edit and Button When Press I
+    var showImageEdit = false;
+    $(document).on("keydown", function(e){
+        if(e.which == 73 && userTyping == false){
+          var squareClass = ".sq-" + $('#userProf').text();
+            if(showImageEdit){
+                $(squareClass).children('.imgEdit').css('display', 'none');
+                $(squareClass).children('.imgEditBtn').css('display', 'none');
+                showImageEdit = false;
+            }else{
+                $(squareClass).children('.imgEdit').css('display', 'block');
+                $(squareClass).children('.imgEditBtn').css('display', 'block');
+                showImageEdit = true;
+            }
+        }
+    });
+    $('.imgEditBtn').click(function(){
+      var thisSquare = $(this).parent();
+      thisSquare.children('.squareImg').height(0.8 * thisSquare.height());
+      thisSquare.children('.squareImg').width(0.8 * thisSquare.width());
+      thisSquare.children('.squareImg').attr('src', thisSquare.children('.imgEdit').val());
+      var squareClass = ".sq-" + $('#userProf').text();
+      $(squareClass).children('.imgEdit').css('display', 'none');
+      $(squareClass).children('.imgEditBtn').css('display', 'none');
+      showImageEdit = false;
+      socket.emit('updateSquareImage', {imageSrc : thisSquare.children('.imgEdit').val(), squareId : thisSquare.attr('id'), roomName : $('#roomName').text()});
     });
 
 //Delete When Press D
