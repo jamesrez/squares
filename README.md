@@ -1,6 +1,6 @@
 ![ScreenShot](https://image.ibb.co/npammR/Screen_Shot_2017_10_19_at_5_15_04_PM.png)
 
-# Sqwar.io
+# [Sqwar.io](http://www.sqwar.io/)
 Sqwar.io is a Realtime Web Application that lets Users Create their own Squares.
 
 ## Features
