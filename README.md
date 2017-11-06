@@ -1,4 +1,4 @@
-![ScreenShot](https://image.ibb.co/npammR/Screen_Shot_2017_10_19_at_5_15_04_PM.png)
+![ScreenShot](https://image.ibb.co/i0sLhb/Screen_Shot_2017_11_06_at_11_04_03_AM.png)
 
 # [Sqwar.io](http://www.sqwar.io/)
 Sqwar.io is a Realtime Web Application that lets Users Create their own Squares.
