@@ -247,6 +247,11 @@ $(document).ready(function(){
         $('#'+data.squareId).remove();
     });
 
+//When the Main Room Squares are deleted
+    socket.on('deleteAllSquares' , function(data){
+        $('.square').remove();
+    });
+
 //When you create a new square
 
     //Save Mouse Position
