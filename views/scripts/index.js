@@ -248,7 +248,7 @@ $(document).ready(function(){
     });
 
 //When the Main Room Squares are deleted
-    socket.on('deleteAllSquares' , function(data){
+    socket.on('deleteAllSquares', function(data){
         $('.square').remove();
     });
 
