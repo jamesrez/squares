@@ -90,6 +90,7 @@ function socketController(io, Square, Room){
               if(err) console.log(err);
               room.squares = [];
               room.save();
+            });
           })
         });
 
