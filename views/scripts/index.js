@@ -148,9 +148,9 @@ $(document).ready(function(){
       if(e.which == 81 && userTyping == false && qPressed == false){
         qPressed = true;
         $('.squareContainer').velocity({
-          "scale" : "-=.2",
+          "scale" : "/=1.2",
         }, 500);
-        zoomScale -= 0.2;
+        zoomScale /= 1.2;
       }
     });
     $(document).on("keyup", function(e){
@@ -165,9 +165,9 @@ $(document).ready(function(){
       if(e.which == 69 && userTyping == false && ePressed == false){
         ePressed = true;
         $('.squareContainer').velocity({
-          "scale" : "+=.2",
+          "scale" : "*=1.2",
         }, 500);
-        zoomScale += 0.2;
+        zoomScale *= 1.2;
       }
     });
     $(document).on("keyup", function(e){
@@ -259,20 +259,26 @@ $(document).ready(function(){
     var mouseY = 0;
     $(document).mousemove(function(e){
         var bodyOffsets = document.body.getBoundingClientRect();
-        mouseX = e.pageX - $('.squareContainer').offset().left;
-        mouseY = e.pageY - $('.squareContainer').offset().top;
+        mouseX = (e.pageX - $('.squareContainer').offset().left) / zoomScale;
+        mouseY = (e.pageY - $('.squareContainer').offset().top) / zoomScale;
     });
 
     //When press space
+    var spam = false;
     $(document).on('keydown', function(e){
         if(e.which == 32 && userTyping == false){
           e.preventDefault();
-          if(userTyping == false && $('#userProf').text()){
+          if(userTyping == false && $('#userProf').text() && !spam){
               var roomName = $('#roomName').text();
               socket.emit('newSquare', {user : $('#userProf').text(), roomName : roomName, mouseX : mouseX, mouseY : mouseY});
+              spam = true;
+              setTimeout(function(){
+                spam = false;
+              }, 2000);
+            }
           }
-        }
-    });
+        });
+
 //When a client makes a new square
     socket.on('newSquare' , function(data){
         //Create a unique square id and create a new square
