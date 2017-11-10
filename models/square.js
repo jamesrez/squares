@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 
 var squareSchema = mongoose.Schema({
   pos : Object,
-  width : Number,
-  height : Number,
+  width : {type : Number, default : 100},
+  height : {type :Number, default : 100},
   zIndex : Number,
   text : String,
   color : String,
