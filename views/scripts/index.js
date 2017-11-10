@@ -343,7 +343,7 @@ $(document).ready(function(){
       socket.emit('updateSquareImage', {imageSrc : thisSquare.children('.imgEdit').val(), squareId : thisSquare.attr('id'), roomName : $('#roomName').text()});
     });
 
-//Delete When Press D
+//Delete When Press F
     $(document).on("keydown", function(e){
       if(e.which == 70 && userTyping == false){
         var squareClass = ".sq-" + $('#userProf').text();
@@ -367,6 +367,21 @@ $(document).ready(function(){
         var squareId = $(this).attr('id');
         var roomName = $('#roomName').text();
         socket.emit('deleteSquare' , {squareId : squareId, roomName : roomName});
+      }
+  });
+
+  //Press X to Hide Other Squares that are not yours
+  var hideOtherSquares = true;
+  $(document).on("keydown", function(e){
+      if(e.which == 88 && userTyping == false){
+        var userSquareClass = ".sq-" + $('#userProf').text();
+          if(hideOtherSquares){
+              $(".square").not(userSquareClass).css('display', 'none');
+              hideOtherSquares = false;
+          }else{
+              $(".square").not(userSquareClass).css('display', 'flex');
+              hideOtherSquares = true;
+          }
       }
   });
 
