@@ -294,6 +294,7 @@ $(document).ready(function(){
         newSquare.removeClass('squarePrototype');
         newSquare.css('min-height' , "1px");
         newSquare.css({width : '100px', height : '100px'});
+        newSquare.css('z-index' , 9000)
         autosize($('.squareTextEdit'));
         makeDraggable('.'+ newClass);
     })
