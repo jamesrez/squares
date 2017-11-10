@@ -84,13 +84,15 @@ function socketController(io, Square, Room){
         //Delete Main Room Squares Every 20 Minutes
         var cron = require('node-cron');
         cron.schedule('*/20 * * * *', function(){
-          socket.broadcast.to('Main').emit('deleteAllSquares');
           Room.findOne({name : 'Main'}, function(err, room){
-            Square.remove({'_id': { $in: room.squares}}, function(err){
-              if(err) console.log(err);
-              room.squares = [];
-              room.save();
-            });
+            if(room.squares.length > 500){
+              socket.broadcast.to('Main').emit('deleteAllSquares');
+              Square.remove({'_id': { $in: room.squares}}, function(err){
+                if(err) console.log(err);
+                room.squares = [];
+                room.save();
+              });
+            }
           })
         });
 
