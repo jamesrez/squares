@@ -224,8 +224,10 @@ $(document).ready(function(){
     socket.on('updateSquareSize' , function(data){
         $('#'+data.squareId).width(data.width);
         $('#'+data.squareId).height(data.height);
-        $('#'+data.squareId).children('.squareImg').width(data.imageWidth);
-        $('#'+data.squareId).children('.squareImg').height(data.imageHeight);
+        if($('#' + data.squareId).children('.squareImg').attr('src')){
+          $('#'+data.squareId).children('.squareImg').width(data.imageWidth);
+          $('#'+data.squareId).children('.squareImg').height(data.imageHeight);
+        }
     });
 
 //When a square is recolored on another client
