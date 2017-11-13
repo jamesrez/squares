@@ -9,6 +9,7 @@ function colorUpdate(jscolor){
 }
 
 var zoomScale = 1.0;
+var zoomOffset = 50;
 
 var resizeToggle = false;
 
@@ -151,6 +152,7 @@ $(document).ready(function(){
           "scale" : "/=1.2",
         }, 500);
         zoomScale /= 1.2;
+        zoomOffset /= 1.2;
       }
     });
     $(document).on("keyup", function(e){
@@ -168,6 +170,7 @@ $(document).ready(function(){
           "scale" : "*=1.2",
         }, 500);
         zoomScale *= 1.2;
+        zoomOffset *= 1.2;
       }
     });
     $(document).on("keyup", function(e){
@@ -259,8 +262,8 @@ $(document).ready(function(){
     var mouseY = 0;
     $(document).mousemove(function(e){
         var bodyOffsets = document.body.getBoundingClientRect();
-        mouseX = (e.pageX - $('.squareContainer').offset().left) / zoomScale;
-        mouseY = (e.pageY - $('.squareContainer').offset().top) / zoomScale;
+        mouseX = ((e.pageX - $('.squareContainer').offset().left - zoomOffset) / zoomScale);
+        mouseY = ((e.pageY - $('.squareContainer').offset().top - zoomOffset) / zoomScale);
     });
 
     //When press space
