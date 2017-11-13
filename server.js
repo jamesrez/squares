@@ -30,7 +30,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 mongoose.connect(process.env.MONGO_URL, function(err){
-    if(err) throw err;
+    if(err){
+      mongoose.connect('mongodb://localhost/my_datasquares', { useMongoClient: true });
+    }
     console.log('Connected to squares database.');
 });
 
