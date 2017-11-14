@@ -46,7 +46,7 @@ app.get('/', function(req,res){
         if(!room){
             var mainRoom = new Room;
             mainRoom.name = "Main";
-            mainRoom.owner = "James";
+            mainRoom.owner = "sqwar";
             mainRoom.squares = [];
             mainRoom.save(function(err,thisRoom){
                 res.render('index.jade' , {curUser : req.user, room : thisRoom});
@@ -70,6 +70,16 @@ app.get('/room/:name', function(req,res){
             res.render('index.jade', {curUser : req.user, room : room});
         }
     })
+});
+
+app.get('/admin', function(req,res){
+  if(req.user && req.user.username == 'sqwar'){
+    Room.find({}, function(err, rooms){
+      res.render('admin.jade', {curUser : req.user, rooms : rooms})
+    });
+  }else{
+    res.send('Who do you think you are?');
+  }
 });
 
 app.post('/register', passport.authenticate('local-signup', {
