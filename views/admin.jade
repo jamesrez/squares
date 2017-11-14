@@ -1,0 +1,14 @@
+extends layout
+block head
+    base(href='/') 
+    link(rel='stylesheet', type='text/css', href='index.css')
+    script(src='https://cdn.jsdelivr.net/npm/autosize@4.0.0/dist/autosize.min.js')
+    script(src='https://rawgit.com/julianshapiro/velocity/master/velocity.min.js')
+    script(src='jscolor.min.js')
+    script(src='admin.js')
+block body
+    form
+      input#adminRoomWipe(placeholder="Type a room to clear of squares!")
+      button#adminRoomWipeBtn Clear
+    p#clearMsg
+      

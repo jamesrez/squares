@@ -252,7 +252,7 @@ $(document).ready(function(){
         $('#'+data.squareId).remove();
     });
 
-//When the Main Room Squares are deleted
+//When the Room Squares are deleted
     socket.on('deleteAllSquares', function(data){
         $('.square').remove();
     });
@@ -368,11 +368,11 @@ $(document).ready(function(){
     });
     $(document).on('click' , '.square', function(){
       //Holding down D and its an anon or user square
-      if(deleteMode && ($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon"))){
+      if(deleteMode && ($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon") || $('#userProf').text() == 'sqwar')){
         $(this).remove();
         var squareId = $(this).attr('id');
         var roomName = $('#roomName').text();
-        socket.emit('deleteSquare' , {squareId : squareId, roomName : roomName});
+        socket.emit('deleteSquare' , {squareId : squareId, roomName : roomName, username : $('#userProf').text()});
       }
   });
 

@@ -20,7 +20,7 @@ block body
               p#logout Logout
       .nav-left
           h3#roomNameLabel=("Room: " + room.name)
-          #roomName=room.name
+          p(hidden)#roomName=room.name
           input#roomInput(name='roomname' type='text' placeholder='Room Name')
           a.roomInputBtn Go To Room
     .squareContainer
