@@ -49,9 +49,10 @@ function socketController(io, Square, Room){
         });
 
         socket.on('updateSquareImage', function(data){
-          socket.broadcast.to(data.roomName).emit('updateSquareImage' , {imageSrc : data.imageSrc, squareId : data.squareId});
+          socket.broadcast.to(data.roomName).emit('updateSquareImage' , {imageSrc : data.imageSrc, squareId : data.squareId, hideSquare : data.hideSquare});
           Square.findById(data.squareId, function(err, thisSquare){
             thisSquare.imageSrc = data.imageSrc;
+            thisSquare.hide = data.hideSquare;
             thisSquare.save();
           });
         });

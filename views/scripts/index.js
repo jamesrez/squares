@@ -117,6 +117,10 @@ $(document).ready(function(){
           loadedSquare.children('.squareImg').attr('src', square.imageSrc);
           loadedSquare.children('.squareImg').height(0.8 * square.height);
           loadedSquare.children('.squareImg').width(0.8 * square.width);
+          if(square.hide){
+            loadedSquare.css('background-color', 'rgba(0,0,0,0)');
+            loadedSquare.css('border', '0px solid black');
+          }
         }
         autosize($('.squareTextEdit'));
         //make it functionable
@@ -245,6 +249,10 @@ $(document).ready(function(){
         $('#'+data.squareId).children('.squareImg').attr('src', data.imageSrc);
         $('#'+data.squareId).children('.squareImg').height(0.8 * $('#'+data.squareId).height());
         $('#'+data.squareId).children('.squareImg').width(0.8 * $('#'+data.squareId).width());
+        if(data.hideSquare){
+          $('#'+data.squareId).css('background-color', 'rgba(0,0,0,0)');
+          $('#'+data.squareId).css('border', '0px solid black');
+        }
     });
 
 //When a square is deleted on another client
@@ -329,10 +337,12 @@ $(document).ready(function(){
             if(showImageEdit){
                 $(squareClass).children('.imgEdit').css('display', 'none');
                 $(squareClass).children('.imgEditBtn').css('display', 'none');
+                $(squareClass).children('.squareShow').css('display', 'none');
                 showImageEdit = false;
             }else{
                 $(squareClass).children('.imgEdit').css('display', 'block');
                 $(squareClass).children('.imgEditBtn').css('display', 'block');
+                $(squareClass).children('.squareShow').css('display', 'block');
                 showImageEdit = true;
             }
         }
@@ -345,8 +355,14 @@ $(document).ready(function(){
       var squareClass = ".sq-" + $('#userProf').text();
       $(squareClass).children('.imgEdit').css('display', 'none');
       $(squareClass).children('.imgEditBtn').css('display', 'none');
+      $(squareClass).children('.squareShow').css('display', 'none');
       showImageEdit = false;
-      socket.emit('updateSquareImage', {imageSrc : thisSquare.children('.imgEdit').val(), squareId : thisSquare.attr('id'), roomName : $('#roomName').text()});
+      var hideSquare = thisSquare.children('.squareShow').is(":checked");
+      if(hideSquare){
+        thisSquare.css('background-color', 'rgba(0,0,0,0)');
+        thisSquare.css('border', '0px solid black');
+      }
+      socket.emit('updateSquareImage', {imageSrc : thisSquare.children('.imgEdit').val(), squareId : thisSquare.attr('id'), roomName : $('#roomName').text(), hideSquare : hideSquare});
     });
 
 //Delete When Press F
