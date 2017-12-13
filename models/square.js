@@ -9,6 +9,7 @@ var squareSchema = mongoose.Schema({
   color : String,
   owner : String,
   imageSrc : String,
+  hide : {type : Boolean, default : false}
 });
 var Square = mongoose.model("Square" , squareSchema);
 
