@@ -211,6 +211,13 @@ form input{
   height : auto;
 }
 
+.squareTextForm{
+  width : 90%;
+  margin : 0px;
+  margin-left : auto;
+  margin-right : auto;
+}
+
 .squareTextEdit{
   text-align: center;
   font-size: 14px;
@@ -220,7 +227,21 @@ form input{
   outline: none;
   margin-left: auto;
   margin-right : auto;
-  width : 90%;
+  text-align: center;
+  width : 100%;
+  height : auto;
+}
+
+.squareTextSize{
+  border : 1px solid grey;
+  border-radius : 3em;
+  text-align: center;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  margin-left: auto;
+  margin-right : auto;
+  width : 50px;
   height : auto;
 }
 

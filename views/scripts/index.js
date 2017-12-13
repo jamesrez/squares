@@ -393,24 +393,43 @@ $(document).ready(function(){
 
 
 //Typing when DoubleClick
+    var currentEditSquare = false;
     $(document).on("dblclick" , ".square" , function(){
       if($(this).hasClass("sq-" + $('#userProf').text()) || $(this).hasClass("squareAnon")){
-        var squareText = $(this).children('p');
-        var squareTextEdit = $(this).children('textarea').css('display' , 'block').val(squareText.text());
+        var squareText = $(this).find('.squareText');
+        var squareTextEdit = $(this).find('.squareTextEdit').css('display' , 'block').val(squareText.text());
+        var squareTextSize = $(this).find('.squareTextSize').css('display' , 'block');
         squareText.css('display' , 'none');
         squareTextEdit.focus();
         userTyping = true;
+        currentEditSquare = $(this);
       }
     });
-    $('.squareTextEdit').blur(function(){
-      userTyping = false;
-      var squareTextEditValue = $(this).val();
-      var squareText = $(this).parent().children('p');
-      squareText.css('display' , 'inline-block').text(squareTextEditValue);
-      $(this).css('display' , 'none');
-      var squareId = squareText.parent().attr('id');
-      socket.emit('updateSquareText' , {text : squareTextEditValue, squareId : squareId, roomName : $('#roomName').text()});
+    $('html').click(function(e){
+      if(e.target.class != '.squareTextForm' && $(e.target).parents('.squareTextForm').length == 0 && currentEditSquare) {
+        userTyping = false;
+        editMode = false;
+        var squareTextEditValue = currentEditSquare.find('.squareTextEdit').val();
+        var squareText = currentEditSquare.find('.squareText');
+        squareText.css('display' , 'inline-block').text(squareTextEditValue);
+        currentEditSquare.find('.squareTextEdit').css('display' , 'none');
+        currentEditSquare.find('.squareTextSize').css('display' , 'none');
+        var squareId = currentEditSquare.attr('id');
+        currentEditSquare = false;
+        socket.emit('updateSquareText' , {text : squareTextEditValue, squareId : squareId, roomName : $('#roomName').text()});
+      }
     });
+    //FONT SIZE
+    $('.squareTextSize').blur(function(e){
+      if($(this).val() > 75){
+        $(this).val(75);
+      }else if($(this).val() < 5){
+        $(this).val(5);
+      }
+      currentEditSquare.find('.squareTextEdit').css('font-size', $(this).val() + 'px');
+      currentEditSquare.find('.squareText').css('font-size', $(this).val() + 'px');
+    });
+
 
     autosize($('.squareTextEdit'));
 
@@ -423,7 +442,7 @@ $(document).ready(function(){
 //Hiding the hints
     var showHints = true
     $(document).on("keydown", function(e){
-        if(e.which == 72){
+        if(e.which == 72 && !userTyping){
             if(showHints){
                 $('.hintsContainer').css('display', 'none');
                 showHints = false;

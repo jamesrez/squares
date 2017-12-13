@@ -5,7 +5,7 @@ block head
     script(src='https://cdn.jsdelivr.net/npm/autosize@4.0.0/dist/autosize.min.js')
     script(src='https://rawgit.com/julianshapiro/velocity/master/velocity.min.js')
     script(src='jscolor.min.js')
-    script(src='indexUgly.js')
+    script(src='index.js')
 block body
     .nav
       .nav-right
@@ -27,7 +27,9 @@ block body
       .squarePrototype
           p.squareText
           button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
-          textarea.squareTextEdit(style='display : none')
+          form.squareTextForm
+            textarea.squareTextEdit(style='display : none')
+            input.squareTextSize(style='display : none' value='14' type='number')
           input.imgEdit(type="text" name="imageSrc" placeholder="Image URL")
           button.imgEditBtn Use Image
           img.squareImg
