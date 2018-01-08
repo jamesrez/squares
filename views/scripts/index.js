@@ -335,14 +335,18 @@ $(document).ready(function(){
         if(e.which == 73 && userTyping == false){
           var squareClass = ".sq-" + $('#userProf').text();
             if(showImageEdit){
-                $(squareClass).children('.imgEdit').css('display', 'none');
-                $(squareClass).children('.imgEditBtn').css('display', 'none');
-                $(squareClass).children('.squareShow').css('display', 'none');
+                $(squareClass).children('.imgForm').css('display', 'none');
+                // $(squareClass).children('.imgEdit').css('display', 'none');
+                // $(squareClass).children('.imgEditBtn').css('display', 'none');
+                // $(squareClass).children('.squareShow').css('display', 'none');
+                // $(squareClass).children('.squareShowLabel').css('display', 'none');
                 showImageEdit = false;
             }else{
-                $(squareClass).children('.imgEdit').css('display', 'block');
-                $(squareClass).children('.imgEditBtn').css('display', 'block');
-                $(squareClass).children('.squareShow').css('display', 'block');
+                $(squareClass).children('.imgForm').css('display', 'flex');
+                // $(squareClass).children('.imgEdit').css('display', 'block');
+                // $(squareClass).children('.imgEditBtn').css('display', 'block');
+                // $(squareClass).children('.squareShow').css('display', 'block');
+                // $(squareClass).children('.squareShowLabel').css('display', 'block');
                 showImageEdit = true;
             }
         }
@@ -356,6 +360,7 @@ $(document).ready(function(){
       $(squareClass).children('.imgEdit').css('display', 'none');
       $(squareClass).children('.imgEditBtn').css('display', 'none');
       $(squareClass).children('.squareShow').css('display', 'none');
+      $(squareClass).children('.squareShowLabel').css('display', 'none');
       showImageEdit = false;
       var hideSquare = thisSquare.children('.squareShow').is(":checked");
       if(hideSquare){
