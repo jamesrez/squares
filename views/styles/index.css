@@ -290,6 +290,7 @@ form input{
 
 
 .guicont {
+  display: none;
   position: fixed;
   margin-left: 30%;
   height: 300px;
