@@ -196,6 +196,14 @@ form input{
   justify-content: center;
 }
 
+.imgForm2 {
+  margin-left: auto;
+  margin-right: auto;
+  display : none;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .imgEdit{
   width: 70%;
   height: 29px;
@@ -203,7 +211,7 @@ form input{
 
 .imgEditBtn{
   margin-left: 20px;
-  width: 10%;
+  width: 20%;
   height: 35px;
 }
 
@@ -278,4 +286,41 @@ form input{
     font-size: 25px;
     text-decoration: underline;
     text-align: center;
+}
+
+
+.guicont {
+  display: none;
+  position: fixed;
+  margin-left: 30%;
+  height: 300px;
+  width: 30%;
+  border-style: solid;
+  border-width: medium;
+  border-color: black;
+  /*display: flex;*/
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(236, 240, 241,.8);
+}
+
+
+
+@media only screen and (max-width: 1350px) and (min-width: 400px)  {
+  .guicont {
+    margin-left: 40%;
+  }
+}
+
+@media only screen and (max-width: 970px) and (min-width: 800px)  {
+  .guicont {
+    margin-left: 50%;
+  }
+}
+
+@media only screen and (max-width: 800px) and (min-width: 100px)  {
+  .guicont {
+    margin-left: 60%;
+  }
 }

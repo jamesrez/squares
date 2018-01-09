@@ -34,9 +34,35 @@ block body
           .imgForm
             input.imgEdit(type="text" name="imageSrc" placeholder="Image URL")
             button.imgEditBtn Use Image
+            
+          .imgForm2
             label.squareShowLabel Hide Square
             input.squareShow(type="checkbox", name="squareShow")
           img.squareImg
+    
+    .guicont
+      h1 GUI
+      p.squareText
+      button.color.jscolor(class="{valueElement:null , onFineChange:'colorUpdate(this)'}", style='display : none') Color
+      form.squareTextForm
+        textarea.squareTextEdit(style='display : none')
+        input.squareTextSize(style='display : none' value='14' type='number')
+      .imgForm
+        input.imgEdit(type="text" name="imageSrc" placeholder="Image URL")
+        button.imgEditBtn Use Image
+        
+      .imgForm2
+        label.squareShowLabel Hide Square
+        input.squareShow(type="checkbox", name="squareShow")
+      img.squareImg
+    
+    
+    
+    
+    
+    
+    
+    
     
     .hintsContainer
         h1#hintHeader Hints
