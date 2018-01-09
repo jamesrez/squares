@@ -287,3 +287,39 @@ form input{
     text-decoration: underline;
     text-align: center;
 }
+
+
+.guicont {
+  position: fixed;
+  margin-left: 30%;
+  height: 300px;
+  width: 30%;
+  border-style: solid;
+  border-width: medium;
+  border-color: black;
+  /*display: flex;*/
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(236, 240, 241,.8);
+}
+
+
+
+@media only screen and (max-width: 1350px) and (min-width: 400px)  {
+  .guicont {
+    margin-left: 40%;
+  }
+}
+
+@media only screen and (max-width: 970px) and (min-width: 800px)  {
+  .guicont {
+    margin-left: 50%;
+  }
+}
+
+@media only screen and (max-width: 800px) and (min-width: 100px)  {
+  .guicont {
+    margin-left: 60%;
+  }
+}
