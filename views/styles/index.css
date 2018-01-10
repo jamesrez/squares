@@ -290,22 +290,31 @@ form input{
 
 
 .guicont {
-  display: none;
+  /*display: none;*/
+  top: 1px;
   position: fixed;
   margin-left: 30%;
-  height: 300px;
-  width: 30%;
+  width: 53%;
   border-style: solid;
-  border-width: medium;
+  border-width: 2px;
   border-color: black;
   /*display: flex;*/
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
-  background-color: rgba(236, 240, 241,.8);
+  background-color: rgba(52, 152, 219,.8);
+  border-radius: 6px;
+  font-size: 16px;
+  height: 27px;
 }
 
-
+.guip {
+  margin-bottom: 0px;
+  margin-top: 0px;
+  margin-left: 5px;
+  font-weight: bold;
+  border-right: solid 1.5px black;
+  width: 35px;
+  height: 25px;
+  border-top: solid 1.5px black
+}
 
 @media only screen and (max-width: 1350px) and (min-width: 400px)  {
   .guicont {
