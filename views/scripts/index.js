@@ -335,14 +335,22 @@ $(document).ready(function(){
         if(e.which == 73 && userTyping == false){
           var squareClass = ".sq-" + $('#userProf').text();
             if(showImageEdit){
+<<<<<<< HEAD
                 $(squareClass).children('.imgForm').css('display', 'none');
+=======
+                $(squareClass).children('.imgForm', '.imgForm2').css('display', 'none');
+>>>>>>> b220bfc33a2b8120c12ec8bde95159f3bc3ab26b
                 // $(squareClass).children('.imgEdit').css('display', 'none');
                 // $(squareClass).children('.imgEditBtn').css('display', 'none');
                 // $(squareClass).children('.squareShow').css('display', 'none');
                 // $(squareClass).children('.squareShowLabel').css('display', 'none');
                 showImageEdit = false;
             }else{
+<<<<<<< HEAD
                 $(squareClass).children('.imgForm').css('display', 'flex');
+=======
+                $(squareClass).children('.imgForm', '.imgForm2').css('display', 'flex');
+>>>>>>> b220bfc33a2b8120c12ec8bde95159f3bc3ab26b
                 // $(squareClass).children('.imgEdit').css('display', 'block');
                 // $(squareClass).children('.imgEditBtn').css('display', 'block');
                 // $(squareClass).children('.squareShow').css('display', 'block');

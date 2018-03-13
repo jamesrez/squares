@@ -196,6 +196,17 @@ form input{
   justify-content: center;
 }
 
+<<<<<<< HEAD
+=======
+.imgForm2 {
+  margin-left: auto;
+  margin-right: auto;
+  display : none;
+  flex-direction: row;
+  justify-content: center;
+}
+
+>>>>>>> b220bfc33a2b8120c12ec8bde95159f3bc3ab26b
 .imgEdit{
   width: 70%;
   height: 29px;
@@ -203,7 +214,11 @@ form input{
 
 .imgEditBtn{
   margin-left: 20px;
+<<<<<<< HEAD
   width: 10%;
+=======
+  width: 20%;
+>>>>>>> b220bfc33a2b8120c12ec8bde95159f3bc3ab26b
   height: 35px;
 }
 
@@ -279,3 +294,52 @@ form input{
     text-decoration: underline;
     text-align: center;
 }
+<<<<<<< HEAD
+=======
+
+
+.guicont {
+  /*display: none;*/
+  top: 1px;
+  position: fixed;
+  margin-left: 30%;
+  width: 53%;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  /*display: flex;*/
+  background-color: rgba(52, 152, 219,.8);
+  border-radius: 6px;
+  font-size: 16px;
+  height: 27px;
+}
+
+.guip {
+  margin-bottom: 0px;
+  margin-top: 0px;
+  margin-left: 5px;
+  font-weight: bold;
+  border-right: solid 1.5px black;
+  width: 35px;
+  height: 25px;
+  border-top: solid 1.5px black
+}
+
+@media only screen and (max-width: 1350px) and (min-width: 400px)  {
+  .guicont {
+    margin-left: 40%;
+  }
+}
+
+@media only screen and (max-width: 970px) and (min-width: 800px)  {
+  .guicont {
+    margin-left: 50%;
+  }
+}
+
+@media only screen and (max-width: 800px) and (min-width: 100px)  {
+  .guicont {
+    margin-left: 60%;
+  }
+}
+>>>>>>> b220bfc33a2b8120c12ec8bde95159f3bc3ab26b
